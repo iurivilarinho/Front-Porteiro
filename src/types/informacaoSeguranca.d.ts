@@ -1,6 +1,5 @@
 export interface InformacaoSeguranca {
   id: number;
-  urlFotoPerfil?: string;
   codigoAcesso: string;
   tipoPessoa: TiposPessoa;
   dataEntrada: string; // Utilizando string no formato YYYY-MM-DD

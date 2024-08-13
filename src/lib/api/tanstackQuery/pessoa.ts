@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import httpRequest from "../axios/httpRequests";
-import { Pessoa } from "@/types/pessoa";
 
-const postPessoa = async (Pessoa: Pessoa) => {
+const postPessoa = async (Pessoa: FormData) => {
   const { data } = await httpRequest.post("/pessoas", Pessoa);
   return data;
 };
