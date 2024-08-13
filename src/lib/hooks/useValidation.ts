@@ -35,23 +35,44 @@ const useValidation = (
     const updatedErrors: ErrorsProps = {};
     let validity = true;
 
-    Object.keys(values).forEach((key) => {
-      const error = validateField(key, values[key]);
-      if (error) {
-        updatedErrors[key] = error;
-        validity = false;
-      }
-    });
+    const recursiveValidate = (values: any, path = "") => {
+      Object.keys(values).forEach((key) => {
+        const fieldPath = path ? `${path}.${key}` : key;
+        const value = values[key];
+
+        if (typeof value === "object" && value !== null) {
+          recursiveValidate(value, fieldPath);
+        } else {
+          const error = validateField(fieldPath, value);
+          if (error) {
+            updatedErrors[fieldPath] = error;
+            validity = false;
+          }
+        }
+      });
+    };
+
+    recursiveValidate(values);
     setErrors(updatedErrors);
     return validity;
   }, [values, validateField]);
 
   const handleChange = useCallback(
     (name: string, value: any) => {
-      setValues((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setValues((prev) => {
+        const keys = name.split(".");
+        const lastKey = keys.pop()!;
+        let nestedObj = prev;
+
+        keys.forEach((key) => {
+          if (!nestedObj[key]) nestedObj[key] = {};
+          nestedObj = nestedObj[key];
+        });
+
+        nestedObj[lastKey] = value;
+
+        return { ...prev };
+      });
 
       if (errors[name]) {
         validateField(name, value);
