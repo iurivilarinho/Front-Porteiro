@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppRouter from "./router/router";
+import { CustomDialogContextProvider } from "./components/dialog/useCustomDialogContext";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -11,7 +12,9 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppRouter />;
+      <CustomDialogContextProvider>
+        <AppRouter />;
+      </CustomDialogContextProvider>
     </QueryClientProvider>
   );
 }

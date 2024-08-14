@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const httpRequest = axios.create({
-  baseURL: "http://localhost:8081",
+  baseURL: "https://saladetestes.com.br:8088",
   withCredentials: true,
 });
 
