@@ -115,7 +115,13 @@ const PessoaForm = () => {
 
     const { foto, ...props } = formValues;
 
-    formData.append("file", foto);
+    if (foto) {
+      if (Array.isArray(foto)) {
+        foto.forEach((file) => formData.append("file", file));
+      } else {
+        formData.append("file", foto);
+      }
+    }
 
     const blobJson = new Blob([JSON.stringify(props)], {
       type: "application/json",
