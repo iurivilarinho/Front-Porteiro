@@ -76,6 +76,6 @@ select:-webkit-autofill:focus {
     @apply box-border border-border;
   }
   body {
-    @apply m-0 border-0 bg-background p-0 text-foreground;
+    @apply m-0 border-0 bg-background p-0 text-foreground bg-slate-200;
   }
 }

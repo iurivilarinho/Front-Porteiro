@@ -37,20 +37,10 @@ const PessoaForm = () => {
       "endereco.cidade": (value) => (value ? null : "Cidade é obrigatória"),
       "endereco.estado": (value) => (value ? null : "Estado é obrigatório"),
       "endereco.cep": (value) => (value ? null : "CEP é obrigatório"),
-      "endereco.unidade": (value) => (value ? null : "Unidade é obrigatória"),
-      "endereco.bloco": (value) => (value ? null : "Bloco é obrigatório"),
-      "endereco.vagaEstacionamento": (value) =>
-        value ? null : "Vaga de estacionamento é obrigatória",
-      "endereco.complemento": (value) =>
-        value ? null : "Complemento é obrigatório",
       "informacaoSeguranca.codigoAcesso": (value) =>
         value ? null : "Código de acesso é obrigatório",
       "informacaoSeguranca.dataEntrada": (value) =>
         value ? null : "Data de entrada é obrigatória",
-      "informacaoSeguranca.dataSaida": (value) =>
-        value ? null : "Data de saída é obrigatória",
-      "informacaoSeguranca.placaVeiculo": (value) =>
-        value ? null : "Placa do veículo é obrigatória",
       "informacaoSeguranca.nomeContatoEmergencia": (value) =>
         value ? null : "Nome do contato de emergência é obrigatório",
       "informacaoSeguranca.relacaoContatoEmergencia": (value) =>
@@ -133,11 +123,11 @@ const PessoaForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate("/pessoas-lista");
-    }
-  }, [isSuccess, navigate]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     navigate("/");
+  //   }
+  // }, [isSuccess, navigate]);
 
   useEffect(() => {
     if (error) {
@@ -154,10 +144,9 @@ const PessoaForm = () => {
 
   return (
     <div className="flex w-full h-full max-w-5xl flex-col gap-6 p-6">
-      <h1 className="text-2xl font-semibold">Detalhes Pessoais</h1>
-
       {/* Dados Pessoais */}
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
+      <h1 className="text-2xl font-semibold pb-4 border-b-2">Detalhes Pessoais</h1>
         <div className="flex gap-8">
           <Input
             label="Nome Completo"
@@ -283,43 +272,52 @@ const PessoaForm = () => {
             handleChange("foto", files);
           }}
           label="Foto da Pessoa"
+          acceptedFileTypes={{
+            ".jpg": ["image/jpeg"],
+            ".jpeg": ["image/jpeg"],
+            ".png": ["image/png"],
+          }}
         />
       </div>
 
       {/* Endereço */}
-      <h1 className="text-2xl font-semibold">Endereço</h1>
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
-        <div className="flex justify-between">
-          <Input
-            label="CEP"
-            value={formValues.endereco.cep}
-            onChange={(e) => {
-              handleChange("endereco.cep", e.target.value);
-              setCep(e.target.value);
-            }}
-            onBlur={() =>
-              validateField("endereco.cep", formValues.endereco.cep)
-            }
-            notification={{
-              isError: Boolean(errors["endereco.cep"]),
-              notification: errors["endereco.cep"] ?? "",
-            }}
-          />
-          <Input
-            label="Estado"
-            className="w-24"
-            value={formValues.endereco.estado}
-            onChange={(e) => handleChange("endereco.estado", e.target.value)}
-            onBlur={() =>
-              validateField("endereco.estado", formValues.endereco.estado)
-            }
-            notification={{
-              isError: Boolean(errors["endereco.estado"]),
-              notification: errors["endereco.estado"] ?? "",
-            }}
-          />
+      <h1 className="text-2xl font-semibold pb-4 border-b-2">Endereço</h1>
+        <div className="flex gap-32">
+          <div className="flex gap-8">
+            <Input
+              label="CEP"
+              value={formValues.endereco.cep}
+              className="w-32"
+              onChange={(e) => {
+                handleChange("endereco.cep", e.target.value);
+                setCep(e.target.value);
+              }}
+              onBlur={() =>
+                validateField("endereco.cep", formValues.endereco.cep)
+              }
+              notification={{
+                isError: Boolean(errors["endereco.cep"]),
+                notification: errors["endereco.cep"] ?? "",
+              }}
+            />
+            <Input
+              label="Estado"
+              className="w-16"
+              value={formValues.endereco.estado}
+              onChange={(e) => handleChange("endereco.estado", e.target.value)}
+              onBlur={() =>
+                validateField("endereco.estado", formValues.endereco.estado)
+              }
+              notification={{
+                isError: Boolean(errors["endereco.estado"]),
+                notification: errors["endereco.estado"] ?? "",
+              }}
+            /></div>
+
           <Input
             label="Cidade"
+            className="w-full"
             value={formValues.endereco.cidade}
             onChange={(e) => handleChange("endereco.cidade", e.target.value)}
             onBlur={() =>
@@ -332,7 +330,7 @@ const PessoaForm = () => {
           />
           <Input
             label="Rua"
-            className="w-80"
+            className="w-full"
             value={formValues.endereco.rua}
             onChange={(e) => handleChange("endereco.rua", e.target.value)}
             onBlur={() =>
@@ -344,10 +342,10 @@ const PessoaForm = () => {
             }}
           />
         </div>
-        <div className="flex justify-between">
+        <div className="flex gap-32">
           <Input
             label="Número"
-            className="w-36"
+            className="w-full"
             value={formValues.endereco.numero}
             onChange={(e) => handleChange("endereco.numero", e.target.value)}
             onBlur={() =>
@@ -361,6 +359,7 @@ const PessoaForm = () => {
           <Input
             label="Bairro"
             value={formValues.endereco.bairro}
+            className="w-full"
             onChange={(e) => handleChange("endereco.bairro", e.target.value)}
             onBlur={() =>
               validateField("endereco.bairro", formValues.endereco.bairro)
@@ -371,19 +370,8 @@ const PessoaForm = () => {
             }}
           />
           <Input
-            label="Unidade"
-            value={formValues.endereco.unidade}
-            onChange={(e) => handleChange("endereco.unidade", e.target.value)}
-            onBlur={() =>
-              validateField("endereco.unidade", formValues.endereco.unidade)
-            }
-            notification={{
-              isError: Boolean(errors["endereco.unidade"]),
-              notification: errors["endereco.unidade"] ?? "",
-            }}
-          />
-          <Input
             label="Bloco"
+            className="w-full"
             value={formValues.endereco.bloco}
             onChange={(e) => handleChange("endereco.bloco", e.target.value)}
             onBlur={() =>
@@ -395,42 +383,61 @@ const PessoaForm = () => {
             }}
           />
         </div>
-        <Input
-          label="Vaga de Estacionamento"
-          value={formValues.endereco.vagaEstacionamento}
-          onChange={(e) =>
-            handleChange("endereco.vagaEstacionamento", e.target.value)
-          }
-          onBlur={() =>
-            validateField(
-              "endereco.vagaEstacionamento",
-              formValues.endereco.vagaEstacionamento
-            )
-          }
-          notification={{
-            isError: Boolean(errors["endereco.vagaEstacionamento"]),
-            notification: errors["endereco.vagaEstacionamento"] ?? "",
-          }}
-        />
-        <Input
-          label="Complemento"
-          value={formValues.endereco.complemento}
-          onChange={(e) => handleChange("endereco.complemento", e.target.value)}
-          onBlur={() =>
-            validateField(
-              "endereco.complemento",
-              formValues.endereco.complemento
-            )
-          }
-          notification={{
-            isError: Boolean(errors["endereco.complemento"]),
-            notification: errors["endereco.complemento"] ?? "",
-          }}
-        />
+
+        <div className="flex gap-32">
+          <Input
+            label="Unidade"
+            value={formValues.endereco.unidade}
+            className="w-full"
+            onChange={(e) => handleChange("endereco.unidade", e.target.value)}
+            onBlur={() =>
+              validateField("endereco.unidade", formValues.endereco.unidade)
+            }
+            notification={{
+              isError: Boolean(errors["endereco.unidade"]),
+              notification: errors["endereco.unidade"] ?? "",
+            }}
+          />
+          <Input
+            label="Complemento"
+            className="w-full"
+            value={formValues.endereco.complemento}
+            onChange={(e) => handleChange("endereco.complemento", e.target.value)}
+            onBlur={() =>
+              validateField(
+                "endereco.complemento",
+                formValues.endereco.complemento
+              )
+            }
+            notification={{
+              isError: Boolean(errors["endereco.complemento"]),
+              notification: errors["endereco.complemento"] ?? "",
+            }}
+          />
+          <Input
+            label="Vaga de Estacionamento"
+            className="w-full"
+            value={formValues.endereco.vagaEstacionamento}
+            onChange={(e) =>
+              handleChange("endereco.vagaEstacionamento", e.target.value)
+            }
+            onBlur={() =>
+              validateField(
+                "endereco.vagaEstacionamento",
+                formValues.endereco.vagaEstacionamento
+              )
+            }
+            notification={{
+              isError: Boolean(errors["endereco.vagaEstacionamento"]),
+              notification: errors["endereco.vagaEstacionamento"] ?? "",
+            }}
+          />
+        </div>
       </div>
       {/* Informação de Segurança */}
-      <h1 className="text-2xl font-semibold">Informações Complementares</h1>
+      
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
+      <h1 className="text-2xl font-semibold pb-4 border-b-2">Informações Complementares</h1>
         <div className="flex gap-28">
           <Input
             label="Código de Acesso"
@@ -470,7 +477,7 @@ const PessoaForm = () => {
           />
         </div>
 
-        <div className="flex gap-80">
+        <div className="flex gap-28">
           <Input
             label="Data de Entrada"
             className="w-full"
