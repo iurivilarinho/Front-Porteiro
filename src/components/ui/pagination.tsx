@@ -98,12 +98,12 @@ const Pagination = ({
       <PaginationContent>
         <PaginationPrevious
           disabled={currentPage === 1}
-          onClick={() => onPageChange(currentPage - 1)}
+          onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         />
         {getPaginationItems()}
         <PaginationNext
           disabled={currentPage === totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
+          onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         />
       </PaginationContent>
     </nav>
