@@ -1,6 +1,8 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Button } from "./button"
+import { EllipsisVertical } from "lucide-react"
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -66,6 +68,40 @@ const TableRow = React.forwardRef<
 ))
 TableRow.displayName = "TableRow"
 
+
+interface TableRowWithButtonProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  onButtonClick?: () => void;
+  // Você pode adicionar mais funções ou propriedades aqui
+}
+
+const TableRowWihtButton = React.forwardRef<
+  HTMLTableRowElement, TableRowWithButtonProps>
+  (({ className, children, onButtonClick, ...props }, ref) => (
+    <tr
+      ref={ref}
+      className={cn(
+        "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <td>
+        <Button
+          onClick={onButtonClick}
+          variant="ghost"
+          size="sm"
+          className="hover:bg-black/20 rounded-full"
+
+        >
+          <EllipsisVertical className="h-4 w-4" />
+        </Button>
+      </td>
+    </tr>
+  ));
+TableRowWihtButton.displayName = "TableRowWihtButton";
+
+
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
@@ -117,4 +153,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableRowWihtButton,
 }

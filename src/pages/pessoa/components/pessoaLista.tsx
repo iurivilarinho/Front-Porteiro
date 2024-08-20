@@ -7,6 +7,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
+    TableRowWihtButton,
 } from "@/components/ui/table";
 import { useState } from "react";
 
@@ -14,6 +15,7 @@ import {
     Pagination
 } from "@/components/ui/pagination";
 
+import OptionDialogTable from "@/components/dialog/optionsDialogTable";
 import { useGetPessoa } from "@/lib/api/tanstackQuery/pessoa";
 import { Pessoa } from "@/types/pessoa";
 
@@ -35,11 +37,20 @@ export function ListaPessoa() {
         return <div>Nenhuma pessoa encontrada.</div>; // Exibe uma mensagem caso não haja dados
     }
 
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedPessoa, setSelectedPessoa] = useState<Pessoa | null>(null);
+
+    const handleButtonClick = (pessoa: Pessoa) => {
+        setSelectedPessoa(pessoa);
+        setIsDialogOpen(true);
+    };
+
     // Paginação dos dados
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const startIndex = Math.max((currentPage - 1), 1) * itemsPerPage;
     const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
-  
+
     console.log(currentPage)
     return (
         <div className="flex h-full justify-center w-full p-10">
@@ -57,14 +68,22 @@ export function ListaPessoa() {
                     </TableHeader>
                     <TableBody>
                         {paginatedData.map((pessoa: Pessoa) => (
-                            <TableRow key={pessoa.id}>
+                            <TableRowWihtButton
+                                key={pessoa.id}
+                                onButtonClick={() => handleButtonClick(pessoa)}
+                            >
                                 <TableCell className="font-medium">{pessoa.nomeCompleto}</TableCell>
                                 <TableCell>{pessoa.email}</TableCell>
                                 <TableCell>{pessoa.telefoneCelular}</TableCell>
                                 <TableCell className="">{pessoa.dataNascimento}</TableCell>
                                 <TableCell>{pessoa.informacaoSeguranca?.placaVeiculo || 'N/A'}</TableCell>
-                            </TableRow>
+
+                            </TableRowWihtButton>
                         ))}
+                        {isDialogOpen && (
+                            <OptionDialogTable
+                                onClose={() => setIsDialogOpen(false)} />
+                        )}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
