@@ -23,6 +23,19 @@ export function ListaPessoa() {
 
   const { data, isLoading, error } = useGetPessoa();
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedPessoa, setSelectedPessoa] = useState<Pessoa | null>(null);
+
+  const handleButtonClick = (pessoa: Pessoa) => {
+    setSelectedPessoa(pessoa);
+    setIsDialogOpen(true);
+  };
+
+  // Paginação dos dados
+  const totalPages = Math.ceil(data?.length / itemsPerPage);
+  const startIndex = Math.max(currentPage - 1, 1) * itemsPerPage;
+  const paginatedData = data?.slice(startIndex, startIndex + itemsPerPage);
+
   if (isLoading) {
     return <div>Carregando...</div>; // Exibe uma mensagem de carregamento
   }
@@ -35,20 +48,6 @@ export function ListaPessoa() {
     return <div>Nenhuma pessoa encontrada.</div>; // Exibe uma mensagem caso não haja dados
   }
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedPessoa, setSelectedPessoa] = useState<Pessoa | null>(null);
-
-  const handleButtonClick = (pessoa: Pessoa) => {
-    setSelectedPessoa(pessoa);
-    setIsDialogOpen(true);
-  };
-
-  // Paginação dos dados
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const startIndex = Math.max(currentPage - 1, 1) * itemsPerPage;
-  const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
-
-  console.log(currentPage);
   return (
     <div className="flex h-full justify-center w-full p-10">
       <div className="w-4/5">
