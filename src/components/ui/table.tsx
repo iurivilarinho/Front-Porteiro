@@ -3,6 +3,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "./button"
 import { EllipsisVertical } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./dropdown-menu"
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -70,13 +71,13 @@ TableRow.displayName = "TableRow"
 
 
 interface TableRowWithButtonProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  onButtonClick?: () => void;
+  onClickVisualize?: () => void;
   // Você pode adicionar mais funções ou propriedades aqui
 }
 
 const TableRowWihtButton = React.forwardRef<
   HTMLTableRowElement, TableRowWithButtonProps>
-  (({ className, children, onButtonClick, ...props }, ref) => (
+  (({ className, children, onClickVisualize, ...props }, ref) => (
     <tr
       ref={ref}
       className={cn(
@@ -87,15 +88,17 @@ const TableRowWihtButton = React.forwardRef<
     >
       {children}
       <td>
-        <Button
-          onClick={onButtonClick}
-          variant="ghost"
-          size="sm"
-          className="hover:bg-black/20 rounded-full"
-
-        >
-          <EllipsisVertical className="h-4 w-4" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger><EllipsisVertical className="h-4 w-4" /></DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onClickVisualize} className="hover:bg-black/20 rounded-full">Visualizar</DropdownMenuItem>
+            <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuItem>Team</DropdownMenuItem>
+            <DropdownMenuItem>Subscription</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </td>
     </tr>
   ));

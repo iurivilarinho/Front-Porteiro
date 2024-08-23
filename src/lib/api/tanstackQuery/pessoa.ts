@@ -11,12 +11,26 @@ const getPessoa = async (filter?: string) => {
   return data;
 };
 
+
+const getPessoaById = async (id: number | string) => {
+  const { data } = await httpRequest.get(`/pessoas/${id}`);
+  return data;
+};
+
 export const useGetPessoa = (filter?: string) => {
   return useQuery({
     queryKey: ["pessoas", filter],
     queryFn: () => getPessoa(filter),
   });
 };
+
+export const useGetPessoaById = (id: number | string) => {
+  return useQuery({
+    queryKey: ["pessoas", id],
+    queryFn: () => getPessoaById(id),
+  });
+};
+
 export const usePostPessoa = () => {
   return useMutation({ mutationFn: postPessoa });
 };

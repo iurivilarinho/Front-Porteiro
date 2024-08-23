@@ -3,10 +3,10 @@ import { useCustomDialogContext } from "@/components/dialog/useCustomDialogConte
 import DragAndDrop from "@/components/dragAndDrop/dragAndDrop";
 import { Input } from "@/components/input/input";
 import { useGetCEP } from "@/lib/api/tanstackQuery/cep";
-import { usePostPessoa } from "@/lib/api/tanstackQuery/pessoa";
+import { useGetPessoaById, usePostPessoa } from "@/lib/api/tanstackQuery/pessoa";
 import useValidation from "@/lib/hooks/useValidation";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const PessoaForm = () => {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const PessoaForm = () => {
     handleChange,
     validateField,
     validateForm,
+    setValues,
     errors,
   } = useValidation(
     {
@@ -86,18 +87,43 @@ const PessoaForm = () => {
   );
 
   const [cep, setCep] = useState("");
-  const { data } = useGetCEP(cep);
-
+  const { data: dataCep } = useGetCEP(cep);
+  const { formType, userId } = useParams();
+  const { data: dataPessoa } = useGetPessoaById(userId ?? "");
 
   // Atualize o estado dos campos quando a resposta da API chegar
   useEffect(() => {
-    if (data) {
-      handleChange("endereco.estado", data.uf);
-      handleChange("endereco.bairro", data.bairro);
-      handleChange("endereco.cidade", data.localidade);
-      handleChange("endereco.rua", data.logradouro);
+    if (dataCep) {
+      handleChange("endereco.estado", dataCep.uf);
+      handleChange("endereco.bairro", dataCep.bairro);
+      handleChange("endereco.cidade", dataCep.localidade);
+      handleChange("endereco.rua", dataCep.logradouro);
     }
-  }, [data]);
+  }, [dataCep]);
+
+  useEffect(() => {
+    switch (formType) {
+      case "cadastro":
+
+        break;
+      case "atualizar":
+
+        break;
+
+      case "visualizar":
+        dataPessoa
+        break;
+
+      default:
+        break;
+    }
+  }, [formType])
+
+  useEffect(() => {
+    if (dataPessoa) setValues(dataPessoa)
+  }, [dataPessoa])
+
+
   const { mutate: postPessoa, isPending, isSuccess, error } = usePostPessoa();
   const { setCustomDialog } = useCustomDialogContext();
   const submitForm = () => {
@@ -146,7 +172,7 @@ const PessoaForm = () => {
     <div className="flex w-full h-full max-w-5xl flex-col gap-6 p-6">
       {/* Dados Pessoais */}
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
-      <h1 className="text-2xl font-semibold pb-4 border-b-2">Detalhes Pessoais</h1>
+        <h1 className="text-2xl font-semibold pb-4 border-b-2">Detalhes Pessoais</h1>
         <div className="flex gap-8">
           <Input
             label="Nome Completo"
@@ -282,7 +308,7 @@ const PessoaForm = () => {
 
       {/* Endereço */}
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
-      <h1 className="text-2xl font-semibold pb-4 border-b-2">Endereço</h1>
+        <h1 className="text-2xl font-semibold pb-4 border-b-2">Endereço</h1>
         <div className="flex gap-32">
           <div className="flex gap-8">
             <Input
@@ -435,9 +461,9 @@ const PessoaForm = () => {
         </div>
       </div>
       {/* Informação de Segurança */}
-      
+
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
-      <h1 className="text-2xl font-semibold pb-4 border-b-2">Informações Complementares</h1>
+        <h1 className="text-2xl font-semibold pb-4 border-b-2">Informações Complementares</h1>
         <div className="flex gap-28">
           <Input
             label="Código de Acesso"

@@ -1,4 +1,4 @@
-import PessoaCadastro from "./components/pessoaCadastro";
+import PessoaCadastro from "./components/pessoaForm";
 
 const Pessoa = () => {
   return (

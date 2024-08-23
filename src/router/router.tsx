@@ -7,7 +7,7 @@ const AppRouter = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Pessoa />} />
+        <Route path="/pessoa/:formType?/:userId?" element={<Pessoa />} />
         <Route path="/login" element={<Login />} />
         <Route path="/table" element={<ListaPessoa />} />
       </Routes>

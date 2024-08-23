@@ -13,9 +13,9 @@ import { useState } from "react";
 
 import { Pagination } from "@/components/ui/pagination";
 
-import OptionDialogTable from "@/components/dialog/optionsDialogTable";
 import { useGetPessoa } from "@/lib/api/tanstackQuery/pessoa";
 import { Pessoa } from "@/types/pessoa";
+import { useNavigate } from "react-router-dom";
 
 export function ListaPessoa() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,13 +23,15 @@ export function ListaPessoa() {
 
   const { data, isLoading, error } = useGetPessoa();
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPessoa, setSelectedPessoa] = useState<Pessoa | null>(null);
+
+  const navigate = useNavigate();
 
   const handleButtonClick = (pessoa: Pessoa) => {
     setSelectedPessoa(pessoa);
-    setIsDialogOpen(true);
+    navigate(`/pessoa/visualizar/${pessoa.id}`)
   };
+
 
   // Paginação dos dados
   const totalPages = Math.ceil(data?.length / itemsPerPage);
@@ -66,7 +68,7 @@ export function ListaPessoa() {
             {paginatedData.map((pessoa: Pessoa) => (
               <TableRowWihtButton
                 key={pessoa.id}
-                onButtonClick={() => handleButtonClick(pessoa)}
+                onClickVisualize={() => handleButtonClick(pessoa)}
               >
                 <TableCell className="font-medium">
                   {pessoa.nomeCompleto}
@@ -79,14 +81,6 @@ export function ListaPessoa() {
                 </TableCell>
               </TableRowWihtButton>
             ))}
-            {isDialogOpen && (
-              <OptionDialogTable
-                selectId={selectedPessoa?.id ?? 0}
-                onClose={() => {
-                  setIsDialogOpen(false);
-                }}
-              />
-            )}
           </TableBody>
           <TableFooter>
             <TableRow>
