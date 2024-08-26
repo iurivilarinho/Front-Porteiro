@@ -3,7 +3,10 @@ import { useCustomDialogContext } from "@/components/dialog/useCustomDialogConte
 import DragAndDrop from "@/components/dragAndDrop/dragAndDrop";
 import { Input } from "@/components/input/input";
 import { useGetCEP } from "@/lib/api/tanstackQuery/cep";
-import { useGetPessoaById, usePostPessoa } from "@/lib/api/tanstackQuery/pessoa";
+import {
+  useGetPessoaById,
+  usePostPessoa,
+} from "@/lib/api/tanstackQuery/pessoa";
 import useValidation from "@/lib/hooks/useValidation";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -90,6 +93,7 @@ const PessoaForm = () => {
   const { data: dataCep } = useGetCEP(cep);
   const { formType, userId } = useParams();
   const { data: dataPessoa } = useGetPessoaById(userId ?? "");
+  const [visualizacao, setVisualizacao] = useState(false);
 
   // Atualize o estado dos campos quando a resposta da API chegar
   useEffect(() => {
@@ -104,25 +108,23 @@ const PessoaForm = () => {
   useEffect(() => {
     switch (formType) {
       case "cadastro":
-
         break;
       case "atualizar":
-
         break;
 
       case "visualizar":
-        dataPessoa
+        dataPessoa;
+        setVisualizacao(true);
         break;
 
       default:
         break;
     }
-  }, [formType])
+  }, [formType]);
 
   useEffect(() => {
-    if (dataPessoa) setValues(dataPessoa)
-  }, [dataPessoa])
-
+    if (dataPessoa) setValues(dataPessoa);
+  }, [dataPessoa]);
 
   const { mutate: postPessoa, isPending, isSuccess, error } = usePostPessoa();
   const { setCustomDialog } = useCustomDialogContext();
@@ -172,7 +174,9 @@ const PessoaForm = () => {
     <div className="flex w-full h-full max-w-5xl flex-col gap-6 p-6">
       {/* Dados Pessoais */}
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
-        <h1 className="text-2xl font-semibold pb-4 border-b-2">Detalhes Pessoais</h1>
+        <h1 className="text-2xl font-semibold pb-4 border-b-2">
+          Detalhes Pessoais
+        </h1>
         <div className="flex gap-8">
           <Input
             label="Nome Completo"
@@ -182,6 +186,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("nomeCompleto", formValues.nomeCompleto)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors.nomeCompleto),
               notification: errors.nomeCompleto ?? "",
@@ -195,6 +200,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("dataNascimento", formValues.dataNascimento)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors.dataNascimento),
               notification: errors.dataNascimento ?? "",
@@ -208,6 +214,7 @@ const PessoaForm = () => {
             value={formValues.cpf}
             onChange={(e) => handleChange("cpf", e.target.value)}
             onBlur={() => validateField("cpf", formValues.cpf)}
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors.cpf),
               notification: errors.cpf ?? "",
@@ -219,6 +226,7 @@ const PessoaForm = () => {
             value={formValues.rg}
             onChange={(e) => handleChange("rg", e.target.value)}
             onBlur={() => validateField("rg", formValues.rg)}
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors.rg),
               notification: errors.rg ?? "",
@@ -232,6 +240,7 @@ const PessoaForm = () => {
             value={formValues.genero}
             onChange={(e) => handleChange("genero", e.target.value)}
             onBlur={() => validateField("genero", formValues.genero)}
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors.genero),
               notification: errors.genero ?? "",
@@ -243,6 +252,7 @@ const PessoaForm = () => {
             value={formValues.estadoCivil}
             onChange={(e) => handleChange("estadoCivil", e.target.value)}
             onBlur={() => validateField("estadoCivil", formValues.estadoCivil)}
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors.estadoCivil),
               notification: errors.estadoCivil ?? "",
@@ -255,6 +265,7 @@ const PessoaForm = () => {
             className="w-full"
             value={formValues.telefoneCelular}
             onChange={(e) => handleChange("telefoneCelular", e.target.value)}
+            disabled={visualizacao}
             onBlur={() =>
               validateField("telefoneCelular", formValues.telefoneCelular)
             }
@@ -267,6 +278,7 @@ const PessoaForm = () => {
             label="Telefone Residencial"
             className="w-full"
             value={formValues.telefoneResidencial}
+            disabled={visualizacao}
             onChange={(e) =>
               handleChange("telefoneResidencial", e.target.value)
             }
@@ -288,6 +300,7 @@ const PessoaForm = () => {
           value={formValues.email}
           onChange={(e) => handleChange("email", e.target.value)}
           onBlur={() => validateField("email", formValues.email)}
+          disabled={visualizacao}
           notification={{
             isError: Boolean(errors.email),
             notification: errors.email ?? "",
@@ -312,6 +325,7 @@ const PessoaForm = () => {
         <div className="flex gap-32">
           <div className="flex gap-8">
             <Input
+              disabled={visualizacao}
               label="CEP"
               value={formValues.endereco.cep}
               className="w-32"
@@ -328,6 +342,7 @@ const PessoaForm = () => {
               }}
             />
             <Input
+              disabled={visualizacao}
               label="Estado"
               className="w-16"
               value={formValues.endereco.estado}
@@ -339,7 +354,8 @@ const PessoaForm = () => {
                 isError: Boolean(errors["endereco.estado"]),
                 notification: errors["endereco.estado"] ?? "",
               }}
-            /></div>
+            />
+          </div>
 
           <Input
             label="Cidade"
@@ -349,6 +365,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("endereco.cidade", formValues.endereco.cidade)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.cidade"]),
               notification: errors["endereco.cidade"] ?? "",
@@ -362,6 +379,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("endereco.rua", formValues.endereco.rua)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.rua"]),
               notification: errors["endereco.rua"] ?? "",
@@ -377,6 +395,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("endereco.numero", formValues.endereco.numero)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.numero"]),
               notification: errors["endereco.numero"] ?? "",
@@ -390,6 +409,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("endereco.bairro", formValues.endereco.bairro)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.bairro"]),
               notification: errors["endereco.bairro"] ?? "",
@@ -403,6 +423,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("endereco.bloco", formValues.endereco.bloco)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.bloco"]),
               notification: errors["endereco.bloco"] ?? "",
@@ -419,6 +440,7 @@ const PessoaForm = () => {
             onBlur={() =>
               validateField("endereco.unidade", formValues.endereco.unidade)
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.unidade"]),
               notification: errors["endereco.unidade"] ?? "",
@@ -428,13 +450,16 @@ const PessoaForm = () => {
             label="Complemento"
             className="w-full"
             value={formValues.endereco.complemento}
-            onChange={(e) => handleChange("endereco.complemento", e.target.value)}
+            onChange={(e) =>
+              handleChange("endereco.complemento", e.target.value)
+            }
             onBlur={() =>
               validateField(
                 "endereco.complemento",
                 formValues.endereco.complemento
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.complemento"]),
               notification: errors["endereco.complemento"] ?? "",
@@ -453,6 +478,7 @@ const PessoaForm = () => {
                 formValues.endereco.vagaEstacionamento
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["endereco.vagaEstacionamento"]),
               notification: errors["endereco.vagaEstacionamento"] ?? "",
@@ -463,7 +489,9 @@ const PessoaForm = () => {
       {/* Informação de Segurança */}
 
       <div className="flex flex-col gap-3 border border-gray-500/40 rounded-lg p-6 bg-white">
-        <h1 className="text-2xl font-semibold pb-4 border-b-2">Informações Complementares</h1>
+        <h1 className="text-2xl font-semibold pb-4 border-b-2">
+          Informações Complementares
+        </h1>
         <div className="flex gap-28">
           <Input
             label="Código de Acesso"
@@ -478,6 +506,7 @@ const PessoaForm = () => {
                 formValues.informacaoSeguranca.codigoAcesso
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["informacaoSeguranca.codigoAcesso"]),
               notification: errors["informacaoSeguranca.codigoAcesso"] ?? "",
@@ -496,6 +525,7 @@ const PessoaForm = () => {
                 formValues.informacaoSeguranca.placaVeiculo
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["informacaoSeguranca.placaVeiculo"]),
               notification: errors["informacaoSeguranca.placaVeiculo"] ?? "",
@@ -518,6 +548,7 @@ const PessoaForm = () => {
                 formValues.informacaoSeguranca.dataEntrada
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["informacaoSeguranca.dataEntrada"]),
               notification: errors["informacaoSeguranca.dataEntrada"] ?? "",
@@ -537,6 +568,7 @@ const PessoaForm = () => {
                 formValues.informacaoSeguranca.dataSaida
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(errors["informacaoSeguranca.dataSaida"]),
               notification: errors["informacaoSeguranca.dataSaida"] ?? "",
@@ -561,6 +593,7 @@ const PessoaForm = () => {
                 formValues.informacaoSeguranca.nomeContatoEmergencia
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(
                 errors["informacaoSeguranca.nomeContatoEmergencia"]
@@ -585,6 +618,7 @@ const PessoaForm = () => {
                 formValues.informacaoSeguranca.relacaoContatoEmergencia
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(
                 errors["informacaoSeguranca.relacaoContatoEmergencia"]
@@ -609,6 +643,7 @@ const PessoaForm = () => {
                 formValues.informacaoSeguranca.telefoneContatoEmergencia
               )
             }
+            disabled={visualizacao}
             notification={{
               isError: Boolean(
                 errors["informacaoSeguranca.telefoneContatoEmergencia"]
@@ -619,11 +654,13 @@ const PessoaForm = () => {
           />
         </div>
       </div>
-      <div className="flex justify-end">
-        <Button onClick={submitForm} disabled={isPending}>
-          {isPending ? "Enviando..." : "Cadastrar"}
-        </Button>
-      </div>
+      {!visualizacao && (
+        <div className="flex justify-end">
+          <Button onClick={submitForm} disabled={isPending}>
+            {isPending ? "Enviando..." : "Cadastrar"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
