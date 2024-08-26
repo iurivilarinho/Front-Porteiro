@@ -1,7 +1,6 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "./button"
 import { EllipsisVertical } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./dropdown-menu"
 
@@ -72,12 +71,13 @@ TableRow.displayName = "TableRow"
 
 interface TableRowWithButtonProps extends React.HTMLAttributes<HTMLTableRowElement> {
   onClickVisualize?: () => void;
+  onClickUpdate?: () => void;
   // Você pode adicionar mais funções ou propriedades aqui
 }
 
 const TableRowWihtButton = React.forwardRef<
   HTMLTableRowElement, TableRowWithButtonProps>
-  (({ className, children, onClickVisualize, ...props }, ref) => (
+  (({ className, children, onClickVisualize, onClickUpdate, ...props }, ref) => (
     <tr
       ref={ref}
       className={cn(
@@ -91,10 +91,10 @@ const TableRowWihtButton = React.forwardRef<
         <DropdownMenu>
           <DropdownMenuTrigger><EllipsisVertical className="h-4 w-4" /></DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onClickVisualize} className="hover:bg-black/20 rounded-full">Visualizar</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuItem onClick={onClickUpdate} className="hover:bg-black/20 rounded-full" >Editar</DropdownMenuItem>
             <DropdownMenuItem>Team</DropdownMenuItem>
             <DropdownMenuItem>Subscription</DropdownMenuItem>
           </DropdownMenuContent>

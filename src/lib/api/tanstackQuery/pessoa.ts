@@ -6,6 +6,17 @@ const postPessoa = async (Pessoa: FormData) => {
   return data;
 };
 
+
+interface PutPessoaParams {
+  pessoa: FormData;
+  id: number | string
+}
+
+const putPessoa = async ({ id, pessoa }: PutPessoaParams) => {
+  const { data } = await httpRequest.put(`/pessoas/${id}`, pessoa);
+  return data;
+};
+
 const getPessoa = async (filter?: string) => {
   const { data } = await httpRequest.get(`/pessoas?${filter ?? ""}`);
   return data;
@@ -33,4 +44,8 @@ export const useGetPessoaById = (id: number | string) => {
 
 export const usePostPessoa = () => {
   return useMutation({ mutationFn: postPessoa });
+};
+
+export const usePutPessoa = () => {
+  return useMutation({ mutationFn: putPessoa });
 };

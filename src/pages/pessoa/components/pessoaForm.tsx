@@ -6,6 +6,7 @@ import { useGetCEP } from "@/lib/api/tanstackQuery/cep";
 import {
   useGetPessoaById,
   usePostPessoa,
+  usePutPessoa,
 } from "@/lib/api/tanstackQuery/pessoa";
 import useValidation from "@/lib/hooks/useValidation";
 import { useEffect, useState } from "react";
@@ -109,7 +110,7 @@ const PessoaForm = () => {
     switch (formType) {
       case "cadastro":
         break;
-      case "atualizar":
+      case "editar":
         break;
 
       case "visualizar":
@@ -126,8 +127,17 @@ const PessoaForm = () => {
     if (dataPessoa) setValues(dataPessoa);
   }, [dataPessoa]);
 
-  const { mutate: postPessoa, isPending, isSuccess, error } = usePostPessoa();
+  const { mutate: postPessoa, isPending, isSuccess: isSuccessPost, error: errorPost } = usePostPessoa();
+  const { mutate: putPessoa, isPending: isPendingPut, isSuccess: isSuccessPut, error: errorPut } = usePutPessoa();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(isPending || isPendingPut)
+  }, [isPendingPut, isPending])
+
+
   const { setCustomDialog } = useCustomDialogContext();
+
   const submitForm = () => {
     const formData = new FormData();
 
@@ -151,16 +161,42 @@ const PessoaForm = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     navigate("/");
-  //   }
-  // }, [isSuccess, navigate]);
+
+  const updateForm = () => {
+    const formData = new FormData();
+
+    const { foto, ...props } = formValues;
+
+    if (foto) {
+      if (Array.isArray(foto)) {
+        foto.forEach((file) => formData.append("file", file));
+      } else {
+        formData.append("file", foto);
+      }
+    }
+
+    const blobJson = new Blob([JSON.stringify(props)], {
+      type: "application/json",
+    });
+    formData.append("form", blobJson);
+
+    if (validateForm()) {
+      putPessoa({
+        pessoa: formData, id: userId ?? ""
+      });
+    }
+  };
 
   useEffect(() => {
-    if (error) {
+    if (isSuccessPut || isSuccessPost) {
+      navigate("/");
+    }
+  }, [isSuccessPut, isSuccessPost]);
+
+  useEffect(() => {
+    if (errorPost || errorPut) {
       const errorMessage =
-        (error as any)?.response?.data?.message ?? "Ocorreu algum erro!";
+        (errorPost as any)?.response?.data?.message || (errorPut as any)?.response?.data?.message || "Ocorreu algum erro!";
       setCustomDialog({
         message: errorMessage,
         title: "Erro",
@@ -168,7 +204,8 @@ const PessoaForm = () => {
         closeHandler: () => setCustomDialog({}),
       });
     }
-  }, [error, navigate]);
+  }, [errorPost, errorPut]);
+  
 
   return (
     <div className="flex w-full h-full max-w-5xl flex-col gap-6 p-6">
@@ -656,8 +693,8 @@ const PessoaForm = () => {
       </div>
       {!visualizacao && (
         <div className="flex justify-end">
-          <Button onClick={submitForm} disabled={isPending}>
-            {isPending ? "Enviando..." : "Cadastrar"}
+          <Button onClick={formType === "editar" ? updateForm : submitForm} disabled={isLoading}>
+            {isLoading ? "Enviando..." : formType === "editar" ? "Editar" : "Cadastrar"}
           </Button>
         </div>
       )}
