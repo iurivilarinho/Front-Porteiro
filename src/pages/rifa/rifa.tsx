@@ -8,14 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useGetRifaById } from "@/lib/api/tanstackQuery/rifa";
 
-const Rifa = () => {
+
+const RifaPage = () => {
   type SelectedButtonsState = Set<string>;
 
-  const buttons = Array.from({ length: 10000 }, (_, index) =>
-    index.toString().padStart(2, "0")
-  );
+  const { data: dataRifa, isLoading: isLoadingRifa } = useGetRifaById(3);
+
+  useEffect(() => {
+
+  }, [isLoadingRifa])
+
 
   // Estado para gerenciar a seleção dos botões
   const [selectedButtons, setSelectedButtons] = useState<SelectedButtonsState>(
@@ -35,17 +40,25 @@ const Rifa = () => {
     });
   };
 
+  if (isLoadingRifa) {
+    return <div className="flex items-center justify-center h-screen">
+      <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+
+    </div>
+    // Exibe uma mensagem de carregamento
+  }
+
   return (
     <div>
       <div className="flex justify-center" >
         <Card className="w-screen mx-10 mb-10">
           <CardHeader>
-            <CardTitle>XJ6</CardTitle>
-            <CardDescription>Card Description</CardDescription>
+            <CardTitle>{dataRifa?.title}</CardTitle>
+            <CardDescription>{dataRifa?.description}</CardDescription>
           </CardHeader>
           <CardContent>
             <p>Card Content</p>
-            <ImageDisplay></ImageDisplay>
+            <ImageDisplay {...dataRifa?.image}></ImageDisplay>
           </CardContent>
           <CardFooter>
             <p>Card Footer</p>
@@ -54,12 +67,12 @@ const Rifa = () => {
       </div>
 
       <div className="grid grid-cols-5 gap-2 mx-10">
-        {buttons.map((button, index) => (
+        {dataRifa?.cotas.map((cota: Cota) => (
           <ButtonRifa
-            key={index}
-            label={button}
-            onClickSelect={() => handleButtonClick(button)}
-            selected={selectedButtons.has(button)}
+            key={cota.id}
+            label={cota.number}
+            onClickSelect={() => handleButtonClick(cota.number)}
+            selected={selectedButtons.has(cota.number)}
           ></ButtonRifa>
         ))}
       </div>
@@ -67,4 +80,4 @@ const Rifa = () => {
   );
 };
 
-export default Rifa;
+export default RifaPage;

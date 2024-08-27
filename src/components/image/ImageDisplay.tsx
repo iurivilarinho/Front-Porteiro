@@ -1,9 +1,10 @@
-const DisplayImage = () => {
+import { Document } from "../../types/document"
+
+const DisplayImage = ({ documento, nome, contentType }: Document) => {
   return (
     <div className="flex justify-center items-center">
       <img
-        src="https://ogimg.infoglobo.com.br/in/3005719-29f-c95/FT1086A/Teste-da-Yamaha-XJ6.-Foto-de-Fabio-RossiAgencia-O-Globo.jpg" // Substitua pelo caminho da sua imagem
-        alt="Description of the image"
+        src={`data:${contentType};base64,${documento}`} alt={nome} // Substitua pelo caminho da sua imagem
         className="w-64 h-64 object-cover rounded-md" // Estilo com Tailwind CSS
       />
     </div>
