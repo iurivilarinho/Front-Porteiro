@@ -39,7 +39,7 @@ const LoginForm = () => {
     if (isAuthenticationSuccess && userData) {
       localStorage.setItem("user", JSON.stringify(userData));
 
-      navigate("/home");
+      navigate("/rifa");
     }
   }, [isAuthenticationSuccess, userData]);
 
