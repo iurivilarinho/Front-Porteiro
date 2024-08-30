@@ -18,9 +18,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/button/button";
 import DialogRandom from "@/components/dialogRandom";
 import DialogInterval from "@/components/dialogInterval";
+import DialogPayment from "@/components/dialogPayment";
 
 const RifaPage = () => {
   const { data: dataRifa, isLoading: isLoadingRifa } = useGetRifaById(4);
@@ -34,12 +34,11 @@ const RifaPage = () => {
 
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const [numberOfShares, setNumberOfShares] = useState(0);
-
   const handleGeneratedNumbers = (numbers: number[]) => {
     const updated = new Set(numbers.map(String));
     console.log(updated);
     setSelectedButtons(updated);
+    setTotalPrice((dataRifa?.quotaPrice ?? 0) * updated.size);
   };
 
   // Função para alternar a seleção dos botões
@@ -51,6 +50,7 @@ const RifaPage = () => {
       } else {
         updated.add(label); // Marcar se não estiver selecionado
       }
+      setTotalPrice((dataRifa?.quotaPrice ?? 0) * updated.size);
       return updated;
     });
   };
@@ -116,19 +116,22 @@ const RifaPage = () => {
                 max={dataRifa?.cotas.length}
                 onGenerate={handleGeneratedNumbers}
               ></DialogInterval>
+              <p className="mt-5 mx-2">ou</p>
               <DialogRandom
                 onGenerate={handleGeneratedNumbers}
                 numberOfShares={dataRifa?.cotas.length}
               ></DialogRandom>
             </div>
-            <div className="w-full flex flex-col items-center justify-center border-t-2 ">
-              <p className=" mt-3">Quantidade de Cotas</p>
+            <div className="w-full flex flex-col items-center justify-center border-t-2">
+              <p className=" mt-3">
+                Quantidade de Cotas: {selectedButtons.size}
+              </p>
             </div>
           </CardContent>
           <CardFooter className="flex items-center justify-center border-t-2 p-3">
             <p>
               Valor: R${" "}
-              {((dataRifa.quotaPrice ?? 0) * numberOfShares)
+              {totalPrice
                 .toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
                 .replace("R$", "")}
             </p>
@@ -136,9 +139,12 @@ const RifaPage = () => {
         </Card>
       </div>
       <div className="flex flex-col items-center">
-        <Button className="mb-4 w-36 h-16" disabled={true}>
-          Comprar
-        </Button>
+        <DialogPayment
+          disableButton={selectedButtons.size > 0 ? false : true}
+          valueQrCode="34996444008"
+          quotesSelected={selectedButtons}
+          totalPrice={totalPrice}
+        ></DialogPayment>
       </div>
 
       <div className="grid grid-cols-5 gap-2 mx-10">

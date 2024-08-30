@@ -31,10 +31,17 @@ const DialogRandom = ({ onGenerate, numberOfShares }: RandomProps) => {
     setRandomNumbers(Array.from(numbers));
   };
 
+  const clearRandomNumbers = () => {
+    setQuantityToGenerate(0)
+    setRandomNumbers([]);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="mb-4 w-32 h-16">Gerar Aleatorio</Button>
+        <Button onClick={clearRandomNumbers} className="mb-4 w-32 h-16">
+          Gerar Aleatorio
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -55,7 +62,7 @@ const DialogRandom = ({ onGenerate, numberOfShares }: RandomProps) => {
             Gerar
           </Button>
         </div>
-        <div className="flex flex-row flex-wrap p-2">
+        <div className="flex flex-row flex-wrap p-2 overflow-y-auto max-h-80">
           {randomNumbers.map((number, index) => (
             <div
               key={index}
