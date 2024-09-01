@@ -25,6 +25,7 @@ const DialogPayment = ({
   disableButton,
 }: RandomProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -39,12 +40,12 @@ const DialogPayment = ({
             Escolha uma das formas de pagamento
           </DialogDescription>
         </DialogHeader>
-        <p>Confira abaixo as cotas que você esta reservando:</p>
+        <p>Confira abaixo as cotas que você está reservando:</p>
         <div className="flex flex-row flex-wrap p-2 overflow-y-auto max-h-28">
           {Array.from(quotesSelected).map((number, index) => (
             <div
               key={index}
-              className="flex items-center justify-center rounded border ml-1 mt-1 w-8 "
+              className="flex items-center justify-center rounded border ml-1 mt-1 w-8"
             >
               <p>{number}</p>
             </div>
@@ -61,25 +62,19 @@ const DialogPayment = ({
           pixkey="+5534996444008" // Chave Pix
           merchant="Your Name" // Nome do destinatário
           city="Your City" // Cidade do destinatário
-          amount={totalPrice} //valor a ser pago
+          amount={totalPrice} // Valor a ser pago
         ></QRCodeGenerator>
-        <DialogFooter>
-          <Button
-            onClick={() => {
-              setIsOpen(false); // Fechar o Dialog ao clicar em Confirmar
-            }}
-          >
-            Confirmar
-          </Button>
-
-          <a
-            href="https://wa.me/+5534996444008"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="my-2"
-          >
-            <Button className="w-full">Enviar comprovante de pagamento</Button>
-          </a>
+        <DialogFooter className="w-full  flex justify-center p-4">
+          <div className="flex items-center justify-center p-2 rounded">
+            <a
+              href="https://wa.me/+5534996444008"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="items-center rounded px-4 py-2"
+            >
+              <Button>Enviar comprovante de pagamento</Button>
+            </a>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

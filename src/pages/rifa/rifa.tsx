@@ -21,6 +21,7 @@ import {
 import DialogRandom from "@/components/dialogRandom";
 import DialogInterval from "@/components/dialogInterval";
 import DialogPayment from "@/components/dialogPayment";
+import { Pessoa } from "@/types/pessoa";
 
 const RifaPage = () => {
   const { data: dataRifa, isLoading: isLoadingRifa } = useGetRifaById(4);
@@ -33,6 +34,10 @@ const RifaPage = () => {
   );
 
   const [totalPrice, setTotalPrice] = useState(0);
+
+  // esta errado, pegar do usuario criador da rifa, localstorage tem que ser o comprador
+  const userString = localStorage.getItem("user");
+  const user: Pessoa | null = userString ? JSON.parse(userString) : null;
 
   const handleGeneratedNumbers = (numbers: number[]) => {
     const updated = new Set(numbers.map(String));
@@ -62,7 +67,7 @@ const RifaPage = () => {
       </div>
     );
   }
-
+  console.log(dataRifa);
   return (
     <div>
       <div className="flex justify-center">
@@ -141,7 +146,7 @@ const RifaPage = () => {
       <div className="flex flex-col items-center">
         <DialogPayment
           disableButton={selectedButtons.size > 0 ? false : true}
-          valueQrCode="34996444008"
+          valueQrCode={user?.paymentInformation.pixkey || ""}
           quotesSelected={selectedButtons}
           totalPrice={totalPrice}
         ></DialogPayment>
