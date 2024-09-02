@@ -1,3 +1,4 @@
+import Botoes from "@/pages/botoes";
 import Login from "@/pages/login/login";
 import { ListaPessoa } from "@/pages/pessoa/components/pessoaLista";
 import Pessoa from "@/pages/pessoa/pessoa";
@@ -12,6 +13,7 @@ const AppRouter = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/table" element={<ListaPessoa />} />
         <Route path="/rifa" element={<Rifa />} />
+        <Route path="/botoes" element={<Botoes />} />
       </Routes>
     </Router>
   );
