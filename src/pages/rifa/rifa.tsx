@@ -146,7 +146,7 @@ const RifaPage = () => {
       <div className="flex flex-col items-center">
         <DialogPayment
           disableButton={selectedButtons.size > 0 ? false : true}
-          valueQrCode={user?.paymentInformation.pixkey || ""}
+          valueQrCode={user?.paymentInformation?.pixkey || ""}
           quotesSelected={selectedButtons}
           totalPrice={totalPrice}
         ></DialogPayment>

@@ -19,7 +19,6 @@ interface RandomProps {
 }
 
 const DialogPayment = ({
-  valueQrCode,
   quotesSelected,
   totalPrice,
   disableButton,
@@ -63,7 +62,7 @@ const DialogPayment = ({
           merchant="Your Name" // Nome do destinatário
           city="Your City" // Cidade do destinatário
           amount={totalPrice} // Valor a ser pago
-        ></QRCodeGenerator>
+        />
         <DialogFooter className="w-full  flex justify-center p-4">
           <div className="flex items-center justify-center p-2 rounded">
             <a

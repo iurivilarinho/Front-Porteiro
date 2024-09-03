@@ -1,4 +1,6 @@
+import { useState } from "react";
 import QRCodePix from "react-qrcode-pix";
+import InputCopy from "./input/inputCopy";
 
 interface QRcodeProps {
   pixkey: string; // Chave Pix
@@ -8,14 +10,23 @@ interface QRcodeProps {
 }
 
 const QRCodeGenerator = ({ pixkey, merchant, city, amount }: QRcodeProps) => {
+  const [qrContent, setQRContent] = useState<string>("");
+
   return (
-    <div className="flex justify-center items-center ">
-      <QRCodePix
-        pixkey={pixkey} // Chave Pix
-        merchant={merchant} // Nome do destinatário
-        city={city} // Cidade do destinatário
-        amount={amount} // Valor da transação
-      />
+    <div className="flex flex-col w-full justify-center items-center">
+      <div>
+        <QRCodePix
+          size={200}
+          pixkey={pixkey} // Chave Pix
+          merchant={merchant} // Nome do destinatário
+          city={city} // Cidade do destinatário
+          amount={amount} // Valor da transação
+          onLoad={setQRContent}
+        />
+      </div>
+      <div className="mt-6">
+        <InputCopy value={qrContent}></InputCopy>
+      </div>
     </div>
   );
 };

@@ -76,7 +76,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 {leftIcon && <>{leftIcon}</>}
                 <input
                   ref={ref}
-                  className="h-full w-full border-none bg-transparent placeholder:text-muted-foreground focus:outline-none focus:ring-0 disabled:opacity-50"
+                  className="h-full w-full border-none bg-transparent placeholder:text-muted-foreground focus:outline-none focus:ring-0 disabled:opacity-50 truncate"
                   {...inputProps}
                 />
                 {rightIcon && <>{rightIcon}</>}
