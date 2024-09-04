@@ -8,23 +8,79 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "./button/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QRCodeGenerator from "./qrCodeGenerator";
+import { usePostReservation } from "@/lib/api/tanstackQuery/reservation";
+import { Pessoa } from "@/types/pessoa";
+import { Reservation } from "@/types/reserva";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RandomProps {
   totalPrice: number;
   quotesSelected: Set<string>;
   valueQrCode: string;
   disableButton: boolean;
+  rifaId: number;
 }
 
 const DialogPayment = ({
   quotesSelected,
   totalPrice,
   disableButton,
+  rifaId,
 }: RandomProps) => {
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
 
+  const {
+    mutate: postReservation,
+    isPending,
+    isSuccess: isSuccessPost,
+    error: errorPost,
+  } = usePostReservation();
+
+  const submitForm = () => {
+    // Recupera o usuário do localStorage
+    const userString = localStorage.getItem("user");
+    if (!userString) {
+      console.error("Usuário não encontrado no localStorage");
+      return;
+    }
+
+    const user = JSON.parse(userString) as Pessoa;
+
+    // Cria a lista de IDs das cotas selecionadas
+    const quotasId = Array.from(quotesSelected).map(Number);
+
+    // Cria o objeto que será passado, tipado como Reservation
+    const reservation: Reservation = {
+      quotasId: quotasId,
+      userPurchase: user,
+      rifaId: rifaId,
+    };
+
+    // Faz a requisição para a API usando o mutate
+    postReservation(reservation, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["rifas"] });
+
+        // Lida com o sucesso, por exemplo, fechando o dialog
+        //setIsOpen(false);
+        console.log("Reserva realizada com sucesso!");
+      },
+      onError: (error) => {
+        // Lida com o erro, por exemplo, exibindo uma mensagem ao usuário
+        console.error("Erro ao realizar reserva:", error);
+      },
+    });
+  };
+  if (isPending) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="w-16 h-16 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -71,7 +127,9 @@ const DialogPayment = ({
               rel="noopener noreferrer"
               className="items-center rounded px-4 py-2"
             >
-              <Button>Enviar comprovante de pagamento</Button>
+              <Button onClick={submitForm}>
+                Enviar comprovante de pagamento
+              </Button>
             </a>
           </div>
         </DialogFooter>

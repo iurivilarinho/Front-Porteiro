@@ -145,6 +145,7 @@ const RifaPage = () => {
       </div>
       <div className="flex flex-col items-center">
         <DialogPayment
+          rifaId={dataRifa?.id}
           disableButton={selectedButtons.size > 0 ? false : true}
           valueQrCode={user?.paymentInformation?.pixkey || ""}
           quotesSelected={selectedButtons}
@@ -159,7 +160,8 @@ const RifaPage = () => {
             label={cota.number}
             onClickSelect={() => handleButtonClick(String(cota.number))}
             selected={selectedButtons.has(String(cota.number))}
-          ></ButtonRifa>
+            sold={cota.sold}
+          />
         ))}
       </div>
     </div>

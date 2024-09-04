@@ -1,6 +1,8 @@
 import { Pessoa } from "./pessoa";
 
 interface Reservation {
-  quotas: Cota[];
+  id?: number;
+  rifaId: number;
+  quotasId: number[];
   userPurchase: Pessoa;
 }
