@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import httpRequest from "../axios/httpRequests";
 import { Reservation } from "@/types/reserva";
 
@@ -42,6 +42,8 @@ export const useGetReservationById = (id: number | string) => {
 };
 
 export const usePostReservation = () => {
+  const queryClient = useQueryClient();
+  queryClient.invalidateQueries({ queryKey: ["rifas"] });
   return useMutation({ mutationFn: postReservation });
 };
 

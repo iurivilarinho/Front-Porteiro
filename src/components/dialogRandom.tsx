@@ -14,9 +14,14 @@ import { useState } from "react";
 interface RandomProps {
   numberOfShares: number;
   onGenerate: (numbers: number[]) => void;
+  selectedNumbers: Set<string>;
 }
 
-const DialogRandom = ({ onGenerate, numberOfShares }: RandomProps) => {
+const DialogRandom = ({
+  onGenerate,
+  numberOfShares,
+  selectedNumbers,
+}: RandomProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [quantityToGenerate, setQuantityToGenerate] = useState(0);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
@@ -26,13 +31,15 @@ const DialogRandom = ({ onGenerate, numberOfShares }: RandomProps) => {
 
     while (numbers.size < quantityToGenerate) {
       const randomNumber = Math.floor(Math.random() * 1000);
-      numbers.add(randomNumber);
+      if (!selectedNumbers.has(String(randomNumber))) {
+        numbers.add(randomNumber);
+      }
     }
     setRandomNumbers(Array.from(numbers));
   };
 
   const clearRandomNumbers = () => {
-    setQuantityToGenerate(0)
+    setQuantityToGenerate(0);
     setRandomNumbers([]);
   };
 

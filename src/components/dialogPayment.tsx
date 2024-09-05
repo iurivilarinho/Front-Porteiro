@@ -8,12 +8,11 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "./button/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import QRCodeGenerator from "./qrCodeGenerator";
 import { usePostReservation } from "@/lib/api/tanstackQuery/reservation";
 import { Pessoa } from "@/types/pessoa";
 import { Reservation } from "@/types/reserva";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface RandomProps {
   totalPrice: number;
@@ -29,7 +28,6 @@ const DialogPayment = ({
   disableButton,
   rifaId,
 }: RandomProps) => {
-  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -62,8 +60,6 @@ const DialogPayment = ({
     // Faz a requisição para a API usando o mutate
     postReservation(reservation, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["rifas"] });
-
         // Lida com o sucesso, por exemplo, fechando o dialog
         //setIsOpen(false);
         console.log("Reserva realizada com sucesso!");

@@ -15,9 +15,14 @@ import useValidation from "@/lib/hooks/useValidation";
 interface IntervalProps {
   onGenerate: (numbers: number[]) => void;
   max: number;
+  selectedNumbers: Set<string>;
 }
 
-const DialogInterval = ({ max, onGenerate }: IntervalProps) => {
+const DialogInterval = ({
+  max,
+  onGenerate,
+  selectedNumbers,
+}: IntervalProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -54,7 +59,9 @@ const DialogInterval = ({ max, onGenerate }: IntervalProps) => {
     if (validateForm()) {
       const numbers: number[] = [];
       for (let i = formValues.de; i <= formValues.ate; i++) {
-        numbers.push(i);
+        if (!selectedNumbers.has(String(i))) {
+          numbers.push(i);
+        }
       }
       onGenerate(numbers);
       setIsOpen(false);

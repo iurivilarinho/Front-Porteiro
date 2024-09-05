@@ -22,6 +22,7 @@ import DialogRandom from "@/components/dialogRandom";
 import DialogInterval from "@/components/dialogInterval";
 import DialogPayment from "@/components/dialogPayment";
 import { Pessoa } from "@/types/pessoa";
+import { Rifa } from "@/types/rifa";
 
 const RifaPage = () => {
   const { data: dataRifa, isLoading: isLoadingRifa } = useGetRifaById(4);
@@ -32,6 +33,20 @@ const RifaPage = () => {
   const [selectedButtons, setSelectedButtons] = useState<Set<string>>(
     new Set()
   );
+
+  const [soldButtons, setSoldButtons] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (dataRifa) {
+      const soldNumbers: Set<string> = new Set();
+      (dataRifa as Rifa)?.cotas.forEach((cota: Cota) => {
+        if (cota.sold) {
+          soldNumbers.add(String(cota.number));
+        }
+        setSoldButtons(soldNumbers);
+      });
+    }
+  }, [dataRifa]);
 
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -120,12 +135,14 @@ const RifaPage = () => {
               <DialogInterval
                 max={dataRifa?.cotas.length}
                 onGenerate={handleGeneratedNumbers}
-              ></DialogInterval>
+                selectedNumbers={soldButtons}
+              />
               <p className="mt-5 mx-2">ou</p>
               <DialogRandom
                 onGenerate={handleGeneratedNumbers}
                 numberOfShares={dataRifa?.cotas.length}
-              ></DialogRandom>
+                selectedNumbers={soldButtons}
+              />
             </div>
             <div className="w-full flex flex-col items-center justify-center border-t-2">
               <p className=" mt-3">
@@ -150,7 +167,7 @@ const RifaPage = () => {
           valueQrCode={user?.paymentInformation?.pixkey || ""}
           quotesSelected={selectedButtons}
           totalPrice={totalPrice}
-        ></DialogPayment>
+        />
       </div>
 
       <div className="grid grid-cols-5 gap-2 mx-10">
