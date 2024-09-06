@@ -170,7 +170,7 @@ const RifaPage = () => {
         />
       </div>
 
-      <div className="grid grid-cols-5 gap-2 mx-10">
+      <div className="grid grid-cols-5 gap-2 mx-10 overflow-y-auto max-h-96">
         {dataRifa?.cotas.map((cota: Cota) => (
           <ButtonRifa
             key={cota.id}

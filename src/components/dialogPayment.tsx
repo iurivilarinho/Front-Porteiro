@@ -30,12 +30,7 @@ const DialogPayment = ({
 }: RandomProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    mutate: postReservation,
-    isPending,
-    isSuccess: isSuccessPost,
-    error: errorPost,
-  } = usePostReservation();
+  const { mutate: postReservation, isPending } = usePostReservation();
 
   const submitForm = () => {
     // Recupera o usuário do localStorage

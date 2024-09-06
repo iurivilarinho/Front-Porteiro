@@ -81,6 +81,7 @@ const DialogRandom = ({
         </div>
         <DialogFooter>
           <Button
+            disabled={randomNumbers.length === 0}
             onClick={() => {
               onGenerate(randomNumbers);
               setIsOpen(false); // Fechar o Dialog ao clicar em Confirmar
