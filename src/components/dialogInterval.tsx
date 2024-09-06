@@ -141,6 +141,12 @@ const DialogInterval = ({
         </div>
         <DialogFooter className="items-center">
           <Button
+            disabled={
+              !formValues.de ||
+              !formValues.ate ||
+              formValues.de <= 0 ||
+              formValues.ate <= 0
+            }
             className="mb-4 w-36 h-16"
             onClick={handleGenerateNumberInterval}
           >

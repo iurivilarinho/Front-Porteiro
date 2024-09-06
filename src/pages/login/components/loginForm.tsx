@@ -2,14 +2,12 @@ import { Button } from "@/components/button/button";
 import { Input } from "@/components/input/input";
 import { usePostLogin } from "@/lib/api/tanstackQuery/login";
 import useValidation from "@/lib/hooks/useValidation";
-import { useEffect } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  // const { setIsLoading } = useLoadingScreenContext();
-
-  // const { isPasswordVisible, handlePasswordVisibility } = useHandlePassword();
   const { values, handleChange, validateField, validateForm, errors } =
     useValidation(
       {
@@ -18,6 +16,7 @@ const LoginForm = () => {
       },
       { login: "", senha: "" }
     );
+
   const {
     mutate: authenticateUser,
     data: userData,
@@ -25,9 +24,11 @@ const LoginForm = () => {
     isSuccess: isAuthenticationSuccess,
   } = usePostLogin();
 
-  // useEffect(() => {
-  //   setIsLoading(isAuthenticationPending);
-  // }, [isAuthenticationPending]);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
 
   const submitForm = () => {
     if (validateForm()) {
@@ -38,13 +39,20 @@ const LoginForm = () => {
   useEffect(() => {
     if (isAuthenticationSuccess && userData) {
       localStorage.setItem("user", JSON.stringify(userData));
-
       navigate("/rifa");
     }
   }, [isAuthenticationSuccess, userData]);
 
+  if (isAuthenticationPending) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="w-16 h-16 border-4 border-t-transparent border-green-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex w-full max-w-lg flex-col gap-6 p-6">
+    <div className="flex w-full max-w-lg flex-col gap-6 p-6 bg-white rounded-lg">
       <div className="flex w-full flex-col items-center gap-3">
         <div className="flex items-center gap-3">
           <h1 className="tracking-tigh text-2xl font-semibold text-foreground">
@@ -65,16 +73,26 @@ const LoginForm = () => {
           notification: errors.login ?? "",
         }}
       />
-      <Input
-        label="Senha"
-        value={values.senha}
-        onChange={(e) => handleChange("senha", e.target.value)}
-        onBlur={() => validateField("senha", values.senha)}
-        notification={{
-          isError: Boolean(errors.senha),
-          notification: errors.senha ?? "",
-        }}
-      />
+      <div className="relative">
+        <Input
+          label="Senha"
+          type={isPasswordVisible ? "text" : "password"}
+          value={values.senha}
+          onChange={(e) => handleChange("senha", e.target.value)}
+          onBlur={() => validateField("senha", values.senha)}
+          notification={{
+            isError: Boolean(errors.senha),
+            notification: errors.senha ?? "",
+          }}
+        />
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className="absolute inset-y-0 right-0 px-3 py-2 text-sm"
+        >
+          {isPasswordVisible ? <Eye /> : <EyeOff />}
+        </button>
+      </div>
       <div className="flex justify-end">
         <Link
           to="/recuperar-senha"
