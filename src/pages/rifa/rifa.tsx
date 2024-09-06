@@ -178,6 +178,7 @@ const RifaPage = () => {
             onClickSelect={() => handleButtonClick(String(cota.number))}
             selected={selectedButtons.has(String(cota.number))}
             sold={cota.sold}
+            userPurchase={cota.userPurchaseId === user?.id}
           />
         ))}
       </div>

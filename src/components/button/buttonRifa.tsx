@@ -6,6 +6,7 @@ interface ButtonRifaProps {
   className?: string; // Propriedade opcional para adicionar classes CSS
   selected?: boolean;
   sold?: boolean;
+  userPurchase?: boolean;
 }
 
 // Componente ButtonRifa utilizando a interface diretamente
@@ -16,6 +17,7 @@ const ButtonRifa = ({
   className = "",
   selected = false,
   sold = false,
+  userPurchase = false,
 }: ButtonRifaProps) => {
   // Define disabled como true se sold for true
   const isDisabled = sold || disabled;
@@ -24,7 +26,7 @@ const ButtonRifa = ({
     <button
       onClick={onClickSelect}
       disabled={isDisabled}
-      className={`py-2 px-4 rounded border ${isDisabled ? "bg-gray-500 text-gray-200 cursor-not-allowed" : sold ? "bg-red-300 text-white" : selected ? "bg-blue-500 text-white" : "bg-white text-black"} ${className}`}
+      className={`py-2 px-4 rounded border ${userPurchase ? "bg-green-500" : isDisabled ? "bg-gray-500 text-gray-200 cursor-not-allowed" : sold ? "bg-red-300 text-white" : selected ? "bg-blue-500 text-white" : "bg-white text-black"} ${className}`}
     >
       {label}
     </button>

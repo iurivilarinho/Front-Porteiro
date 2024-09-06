@@ -43,8 +43,13 @@ export const useGetReservationById = (id: number | string) => {
 
 export const usePostReservation = () => {
   const queryClient = useQueryClient();
-  queryClient.invalidateQueries({ queryKey: ["rifas"] });
-  return useMutation({ mutationFn: postReservation });
+
+  return useMutation({
+    mutationFn: postReservation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rifas"] });
+    },
+  });
 };
 
 export const usePutReservation = () => {
