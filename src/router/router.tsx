@@ -3,6 +3,7 @@ import Login from "@/pages/login/login";
 import { ListaPessoa } from "@/pages/pessoa/components/pessoaLista";
 import Pessoa from "@/pages/pessoa/pessoa";
 import Rifa from "@/pages/rifa/rifa";
+import RifaForm from "@/pages/rifa/rifaForm";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 const AppRouter = () => {
@@ -14,6 +15,7 @@ const AppRouter = () => {
         <Route path="/table" element={<ListaPessoa />} />
         <Route path="/rifa" element={<Rifa />} />
         <Route path="/botoes" element={<Botoes />} />
+        <Route path="/home" element={<RifaForm />} />
       </Routes>
     </Router>
   );
