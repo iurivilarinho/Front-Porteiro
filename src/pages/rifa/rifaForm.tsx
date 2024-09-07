@@ -6,6 +6,10 @@ import { Input } from "@/components/input/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/button/button";
 import { usePostRifa } from "@/lib/api/tanstackQuery/rifa";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/input/label";
+import { useState } from "react";
+import DataInput from "../login/components/dateInput";
 
 // Definindo o esquema de validação com Zod
 const rifaFormSchema = z.object({
@@ -74,6 +78,22 @@ const RifaForm = () => {
 
     postRifa(formData);
   };
+
+  const [dateRifa, setDateRifa] = useState(false);
+  const [completedRifa, setCompletedRifa] = useState(true);
+
+  const handleDateRifa = () => {
+    // Se ainda não estiver ativado
+    setDateRifa(!dateRifa); // Liga o switch de "Informar data de sorteio"
+    setCompletedRifa(!completedRifa); // Desliga o outro switch
+  };
+
+  const handleCompletedRifa = () => {
+    // Se ainda não estiver ativado
+    setCompletedRifa(!completedRifa); // Liga o switch de "Sortear após realizar as vendas"
+    setDateRifa(!dateRifa); // Desliga o outro switch
+  };
+
   if (isPending) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -84,7 +104,10 @@ const RifaForm = () => {
 
   return (
     <div className="bg-black/40 flex justify-center">
-      <div className="w-2/3 bg-white p-3 ">
+      <div className="w-full lg:w-2/3 bg-white p-3 ">
+        <h1 className="text-2xl font-semibold pb-4 border-b-2">
+          Detalhes da ação
+        </h1>
         <div className="">
           <Input
             className="my-3"
@@ -104,6 +127,39 @@ const RifaForm = () => {
               notification: errors.description?.message,
             }}
           />
+        </div>
+
+        <div className="gap-3 p-3">
+          <p className="mb-6">Oque você deseja?</p>
+          <div className="flex flex-col">
+          <Label>Informar data de sorteio</Label>
+          <Switch
+              className="mx-3 my-3"
+              checked={completedRifa}
+              onCheckedChange={handleDateRifa}
+            />
+            <div className="flex flex-col w-full sm:flex-row lg:flex-row ">
+             
+
+              {!dateRifa && (
+                <div className="relative h-20 w-full my-2 max-w-28 sm:h-0 sm:mx-10  ">
+                  <DataInput
+                    label="Data de sorteio"
+                    className="absolute  sm:top-[-83px] left-0 z-50  sm:ml-80"
+                  />
+                </div>
+              )}
+            </div>
+           
+          </div>
+          <div className="flex flex-col">
+            <Label>Sortear após realizar as vendas</Label>
+            <Switch
+              className="mx-3 my-3"
+              checked={dateRifa}
+              onCheckedChange={handleCompletedRifa}
+            />
+          </div>
         </div>
 
         <div className="flex justify-between my-5">
@@ -153,7 +209,9 @@ const RifaForm = () => {
             }}
           />
         </div>
-
+        <h1 className="text-2xl font-semibold pb-4 border-b-2">
+          Detalhes do prêmio
+        </h1>
         <div>
           <Textarea
             className="my-3"
