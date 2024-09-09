@@ -1,6 +1,8 @@
 import ButtonRifa from "@/components/button/buttonRifa";
+import DialogInterval from "@/components/dialogInterval";
+import MultiStepForm from "@/components/dialogMultiStep";
+import DialogRandom from "@/components/dialogRandom";
 import ImageDisplay from "@/components/image/ImageDisplay";
-import { Document } from "../../types/document";
 import {
   Card,
   CardContent,
@@ -9,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useEffect, useState } from "react";
-import { useGetRifaById } from "@/lib/api/tanstackQuery/rifa";
 import {
   Carousel,
   CarouselContent,
@@ -18,11 +18,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import DialogRandom from "@/components/dialogRandom";
-import DialogInterval from "@/components/dialogInterval";
-import DialogPayment from "@/components/dialogPayment";
+import { useGetRifaById } from "@/lib/api/tanstackQuery/rifa";
 import { Pessoa } from "@/types/pessoa";
 import { Rifa } from "@/types/rifa";
+import { useEffect, useState } from "react";
+import { Document } from "../../types/document";
 
 const RifaPage = () => {
   const { data: dataRifa, isLoading: isLoadingRifa } = useGetRifaById(4);
@@ -161,7 +161,7 @@ const RifaPage = () => {
         </Card>
       </div>
       <div className="flex flex-col items-center">
-        <DialogPayment
+        <MultiStepForm
           rifaId={dataRifa?.id}
           disableButton={selectedButtons.size > 0 ? false : true}
           valueQrCode={user?.paymentInformation?.pixkey || ""}
@@ -170,7 +170,7 @@ const RifaPage = () => {
         />
       </div>
 
-      <div className="grid grid-cols-5 gap-2 mx-10 overflow-y-auto max-h-96">
+      <div className="grid grid-cols-5 gap-2 mx-10 overflow-y-auto max-h-96 mb-16">
         {dataRifa?.cotas.map((cota: Cota) => (
           <ButtonRifa
             key={cota.id}

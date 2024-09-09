@@ -9,7 +9,7 @@ import { usePostRifa } from "@/lib/api/tanstackQuery/rifa";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/input/label";
 import { useState } from "react";
-import DataInput from "../login/components/dateInput";
+import DataInput from "../../components/input/dateInput";
 
 // Definindo o esquema de validação com Zod
 const rifaFormSchema = z.object({

@@ -4,5 +4,5 @@ interface Reservation {
   id?: number;
   rifaId: number;
   quotasId: number[];
-  userPurchase: Pessoa;
+  userPurchase: UserFormType;
 }
