@@ -5,7 +5,7 @@ import { ListaPessoa } from "@/pages/pessoa/components/pessoaLista";
 import Pessoa from "@/pages/pessoa/pessoa";
 import Rifa from "@/pages/rifa/rifa";
 import RifaForm from "@/pages/rifa/rifaForm";
-import UserForm from "@/pages/usuario/usuarioForm";
+import RifaList from "@/pages/rifa/rifaList";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 const AppRouter = () => {
@@ -15,12 +15,12 @@ const AppRouter = () => {
         <Route path="/pessoa/:formType?/:userId?" element={<Pessoa />} />
         <Route path="/login" element={<Login />} />
         <Route path="/table" element={<ListaPessoa />} />
-        <Route path="/rifa" element={<Rifa />} />
+        <Route path="/rifa/:rifaId?" element={<Rifa />} />
         <Route path="/botoes" element={<Botoes />} />
         <Route path="/home" element={<RifaForm />} />
-        <Route path="/user" element={<UserForm />} />
+        <Route path="/rifas/:cpf?" element={<RifaList />} />
       </Routes>
-      <BottomNavBar></BottomNavBar>
+      <BottomNavBar />
     </Router>
   );
 };

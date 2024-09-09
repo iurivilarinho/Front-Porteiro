@@ -23,9 +23,14 @@ import { Pessoa } from "@/types/pessoa";
 import { Rifa } from "@/types/rifa";
 import { useEffect, useState } from "react";
 import { Document } from "../../types/document";
+import { useParams } from "react-router-dom";
 
 const RifaPage = () => {
-  const { data: dataRifa, isLoading: isLoadingRifa } = useGetRifaById(4);
+  const { rifaId } = useParams();
+
+  const { data: dataRifa, isLoading: isLoadingRifa } = useGetRifaById(
+    rifaId ?? ""
+  );
 
   useEffect(() => {}, [isLoadingRifa]);
 
