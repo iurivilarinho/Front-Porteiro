@@ -59,7 +59,7 @@ const BottomNavBar = () => {
   // Função que será chamada após a validação
   const handleOnSubmit = (data: findCpf) => {
     const { cpf } = data;
-    navigate(`/rifas/${cpf}`);
+    navigate(`/${cpf}`);
   };
 
   const handleShare = () => {
@@ -78,7 +78,7 @@ const BottomNavBar = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-green-500 text-white flex justify-around p-4 sm:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-green-500 text-white flex justify-around p-4 h-16 sm:top-0 sm:bottom-auto">
       <div className="flex flex-col items-center">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger>
@@ -112,7 +112,7 @@ const BottomNavBar = () => {
       <div className="flex flex-col items-center">
         <Ticket
           onClick={() => {
-            navigate("/rifas");
+            navigate("/");
           }}
           className="h-6 w-6"
         />

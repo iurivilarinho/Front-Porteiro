@@ -14,6 +14,7 @@ import { Button } from "./button/button";
 import InputCopy from "./input/inputCopy";
 import QRCodeGenerator from "./qrCodeGenerator";
 import { UserFormType } from "@/types/usuario";
+import { Pessoa } from "@/types/pessoa";
 
 interface PaymentCardProps {
   totalPrice: number;
@@ -21,9 +22,11 @@ interface PaymentCardProps {
   valueQrCode: string;
   rifaId: number;
   userData: UserFormType | null;
+  userCreation: Pessoa;
 }
 
 const PaymentCard = ({
+  userCreation,
   quotesSelected,
   totalPrice,
   rifaId,
@@ -54,13 +57,13 @@ const PaymentCard = ({
       },
     });
   };
-
+{console.log(userCreation.paymentInformation)}
   const copyAndPaste = CopyAndPaste({
-    name: "Nome do Receptor",
-    key: "13953129660",
+    name: userCreation.nome,
+    key: userCreation.paymentInformation.pixKey,
     amount: totalPrice,
-    city: "Sua Cidade",
-    id: "+5534996444008",
+    city: "Ituiutaba",
+    id: "000000",
   });
 
   if (isPending) {

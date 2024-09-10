@@ -30,7 +30,7 @@ const DialogRandom = ({
     const numbers = new Set<number>();
 
     while (numbers.size < quantityToGenerate) {
-      const randomNumber = Math.floor(Math.random() * 1000);
+      const randomNumber = Math.floor(Math.random() * numberOfShares + 1);
       if (!selectedNumbers.has(String(randomNumber))) {
         numbers.add(randomNumber);
       }

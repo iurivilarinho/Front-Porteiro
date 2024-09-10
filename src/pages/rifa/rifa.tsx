@@ -24,6 +24,7 @@ import { Rifa } from "@/types/rifa";
 import { useEffect, useState } from "react";
 import { Document } from "../../types/document";
 import { useParams } from "react-router-dom";
+import BarraPorgresso from "../pessoa/components/barraProgresso";
 
 const RifaPage = () => {
   const { rifaId } = useParams();
@@ -79,7 +80,12 @@ const RifaPage = () => {
       return updated;
     });
   };
-
+  const totalCotas = dataRifa?.cotas?.length ? dataRifa.cotas.length : 0;
+  const cotasVendidas = dataRifa?.cotas?.length
+    ? dataRifa.cotas.filter((cota: Cota) => cota.sold).length
+    : 0;
+  const porcentagemVendida =
+    cotasVendidas === 0 ? 0 : (cotasVendidas / totalCotas) * 100;
   if (isLoadingRifa) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -94,7 +100,7 @@ const RifaPage = () => {
         <Card className="w-screen mx-10 mb-10">
           <CardHeader>
             <CardTitle>{dataRifa?.title}</CardTitle>
-            <CardDescription>{dataRifa?.description}</CardDescription>
+            <CardDescription>{dataRifa?.descriptionAward}</CardDescription>
           </CardHeader>
           <CardContent>
             <Carousel opts={{ loop: true }}>
@@ -109,20 +115,41 @@ const RifaPage = () => {
               <CarouselNext />
             </Carousel>
           </CardContent>
-          <CardFooter></CardFooter>
+          <CardFooter>
+            <BarraPorgresso
+              label={`${porcentagemVendida.toFixed(0)}% vendido`}
+              porcentagem={porcentagemVendida}
+            />
+          </CardFooter>
+        </Card>
+      </div>
+
+      <div className="flex justify-center">
+        <Card className="w-screen mx-10 bg-white rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-3 duration-3000 animate-bounce">
+          <CardContent className="flex justify-center items-center mt-3">
+            <p className="w-full text-center text-2xl font-extrabold text-red-600">
+              Por Apenas R$ {dataRifa.quotaPrice ?? 0} !
+            </p>
+          </CardContent>
         </Card>
       </div>
 
       <div className="flex justify-center">
         <Card className="w-screen mx-10 mb-10">
           <CardHeader>
-            <CardTitle></CardTitle>
+            <CardTitle>
+              <p>Descrição e Regulamento</p>
+            </CardTitle>
             <CardDescription></CardDescription>
           </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-extrabold text-blue-700 drop-shadow-lg tracking-wide">
-              Por Apenas R$ {dataRifa.quotaPrice ?? 0} !
-            </p>
+          <CardContent className="w-full">
+            <div className="flex flex-row flex-wrap p-2 overflow-y-auto max-h-60 w-full bg-slate-100">
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: dataRifa.description.replace(/\n/g, "<br />"),
+                }}
+              />
+            </div>
           </CardContent>
 
           <CardFooter></CardFooter>
@@ -167,15 +194,16 @@ const RifaPage = () => {
       </div>
       <div className="flex flex-col items-center">
         <MultiStepForm
+          userCreation={dataRifa?.userCreation}
           rifaId={dataRifa?.id}
           disableButton={selectedButtons.size > 0 ? false : true}
-          valueQrCode={user?.paymentInformation?.pixkey || ""}
+          valueQrCode={user?.paymentInformation?.pixKey || ""}
           quotesSelected={selectedButtons}
           totalPrice={totalPrice}
         />
       </div>
 
-      <div className="grid grid-cols-5 gap-2 mx-10 overflow-y-auto max-h-96 mb-16">
+      <div className="grid grid-cols-5 gap-2 mx-10 overflow-y-auto max-h-96">
         {dataRifa?.cotas.map((cota: Cota) => (
           <ButtonRifa
             key={cota.id}

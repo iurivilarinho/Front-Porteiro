@@ -17,8 +17,8 @@ const AppRouter = () => {
         <Route path="/table" element={<ListaPessoa />} />
         <Route path="/rifa/:rifaId?" element={<Rifa />} />
         <Route path="/botoes" element={<Botoes />} />
-        <Route path="/home" element={<RifaForm />} />
-        <Route path="/rifas/:cpf?" element={<RifaList />} />
+        <Route path="/home/:formType?/:rifaId?" element={<RifaForm />} />
+        <Route path="/:cpf?" element={<RifaList />} />
       </Routes>
       <BottomNavBar />
     </Router>

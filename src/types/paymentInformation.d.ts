@@ -1,4 +1,4 @@
 interface PaymentInformation {
   id: number;
-  pixkey: string;
+  pixKey: string;
 }

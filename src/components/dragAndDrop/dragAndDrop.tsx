@@ -5,8 +5,14 @@ import UploadCloudIcon from "@/assets/icons/uploadCloud";
 import UploadImageIcon from "@/assets/icons/uploadImageIcon";
 import { Button } from "../button/button";
 import { Label } from "../input/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CloseIcon from "@/assets/icons/closeIcon";
+
+// Aceita tanto arquivos novos (File) quanto arquivos do backend (Document)
+interface Document {
+  nome: string;
+  contentType: string;
+}
 
 interface DragAndDropProps {
   id?: string;
@@ -14,6 +20,7 @@ interface DragAndDropProps {
   onAddFile?: (files: File[]) => void;
   acceptedFileTypes?: Accept;
   notification?: NotificationProps;
+  initialFiles?: Document[]; // Arquivos iniciais
 }
 
 const DragAndDrop = ({
@@ -22,25 +29,43 @@ const DragAndDrop = ({
   onAddFile,
   acceptedFileTypes,
   notification,
+  initialFiles = [], // Inicializa como array vazio por padrão
 }: DragAndDropProps) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [existingFiles, setExistingFiles] = useState<Document[]>(initialFiles);
+
+  useEffect(() => {
+    setExistingFiles(initialFiles); // Atualiza os arquivos existentes
+  }, [initialFiles]);
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
-      setSelectedFiles(acceptedFiles);
+      const updatedFiles = [...selectedFiles, ...acceptedFiles]; // Adiciona os novos arquivos
+      setSelectedFiles(updatedFiles);
       if (onAddFile) {
-        onAddFile(acceptedFiles);
+        onAddFile(updatedFiles);
       }
     },
     noClick: true,
     accept: acceptedFileTypes ?? {},
   });
 
-  const handleRemoveFile = (fileName: string) => {
-    const updatedFiles = selectedFiles.filter((file) => file.name !== fileName);
-    setSelectedFiles(updatedFiles);
-    if (onAddFile) {
-      onAddFile(updatedFiles);
+  const handleRemoveFile = (fileName: string, isExisting: boolean) => {
+    if (isExisting) {
+      // Remove um arquivo existente
+      const updatedExistingFiles = existingFiles.filter(
+        (file) => file.nome !== fileName
+      );
+      setExistingFiles(updatedExistingFiles);
+    } else {
+      // Remove um arquivo novo
+      const updatedFiles = selectedFiles.filter(
+        (file) => file.name !== fileName
+      );
+      setSelectedFiles(updatedFiles);
+      if (onAddFile) {
+        onAddFile(updatedFiles); // Atualiza a lista de arquivos novos
+      }
     }
   };
 
@@ -51,7 +76,7 @@ const DragAndDrop = ({
         {...getRootProps({
           className: cn(
             "flex flex-col items-center justify-center border-2 border-dashed rounded-md text-center gap-2 p-6",
-            isDragActive ? "border-primary bg-muted" : "border-slate-300",
+            isDragActive ? "border-primary bg-muted" : "border-slate-300"
           ),
         })}
       >
@@ -69,16 +94,17 @@ const DragAndDrop = ({
           </Button>
         </>
       </div>
-      {selectedFiles.length > 0 && (
+
+      {/* Exibindo arquivos existentes */}
+      {existingFiles.length > 0 && (
         <div className="mt-2 grid gap-2">
-          {selectedFiles.map((file) => (
-            <div key={file.name} className="flex items-center gap-2">
+          {existingFiles.map((file) => (
+            <div key={file.nome} className="flex items-center gap-2">
               <UploadImageIcon />
-              <span className="text-sm text-muted-foreground">{file.name}</span>
-              {/* Botão de remover arquivo */}
+              <span className="text-sm text-muted-foreground">{file.nome}</span>
               <button
                 type="button"
-                onClick={() => handleRemoveFile(file.name)}
+                onClick={() => handleRemoveFile(file.nome, true)} // Arquivo existente
                 className="ml-2 text-muted-foreground"
               >
                 <CloseIcon className="h-4 w-4" />
@@ -87,6 +113,26 @@ const DragAndDrop = ({
           ))}
         </div>
       )}
+
+      {/* Exibindo arquivos novos */}
+      {selectedFiles.length > 0 && (
+        <div className="mt-2 grid gap-2">
+          {selectedFiles.map((file) => (
+            <div key={file.name} className="flex items-center gap-2">
+              <UploadImageIcon />
+              <span className="text-sm text-muted-foreground">{file.name}</span>
+              <button
+                type="button"
+                onClick={() => handleRemoveFile(file.name, false)} // Arquivo novo
+                className="ml-2 text-muted-foreground"
+              >
+                <CloseIcon className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {notification && <Notification {...notification} />}
     </div>
   );

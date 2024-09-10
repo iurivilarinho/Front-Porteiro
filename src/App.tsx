@@ -13,7 +13,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CustomDialogContextProvider>
-        <AppRouter />;
+        <div className="pt-0 pb-16 sm:pt-16 sm:pb-0">
+          <AppRouter />;
+        </div>
       </CustomDialogContextProvider>
     </QueryClientProvider>
   );

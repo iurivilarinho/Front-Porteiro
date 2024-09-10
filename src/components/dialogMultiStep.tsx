@@ -7,6 +7,7 @@ import { Button } from "./button/button";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserFormType, userFormSchema } from "@/types/usuario";
+import { Pessoa } from "@/types/pessoa";
 
 // Importe o schema de validação
 
@@ -18,9 +19,11 @@ interface MultiStepProps {
   valueQrCode: string;
   disableButton: boolean;
   rifaId: number;
+  userCreation: Pessoa;
 }
 
 const MultiStepForm = ({
+  userCreation,
   rifaId,
   valueQrCode,
   quotesSelected,
@@ -40,7 +43,7 @@ const MultiStepForm = ({
     if (activeStep === 0) {
       const isValid = await methods.trigger();
       if (!isValid) return;
-      const data = methods.getValues();
+      const data = methods.watch();
       setUserData(data);
     }
     setActiveStep((prev) => prev + 1);
@@ -55,6 +58,7 @@ const MultiStepForm = ({
       case 1:
         return (
           <PaymentCard
+            userCreation={userCreation}
             totalPrice={totalPrice}
             quotesSelected={quotesSelected}
             valueQrCode={valueQrCode}
