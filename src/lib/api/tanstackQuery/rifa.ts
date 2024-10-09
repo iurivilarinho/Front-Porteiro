@@ -41,6 +41,7 @@ export const useGetRifaById = (id: number | string) => {
   return useQuery({
     queryKey: ["rifas", id],
     queryFn: () => getRifaById(id),
+    enabled: !!id,
   });
 };
 
