@@ -125,7 +125,7 @@ const RifaPage = () => {
       </div>
 
       <div className="flex justify-center">
-        <Card className="w-screen mx-10 bg-white rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-3 duration-3000 animate-bounce">
+        <Card className="w-screen mx-10 mb-10 bg-white rounded-lg shadow-lg  ">
           <CardContent className="flex justify-center items-center mt-3">
             <p className="w-full text-center text-2xl font-extrabold text-red-600">
               Por Apenas R$ {dataRifa.quotaPrice ?? 0} !
@@ -202,19 +202,20 @@ const RifaPage = () => {
           totalPrice={totalPrice}
         />
       </div>
-
-      <div className="grid grid-cols-5 gap-2 mx-10 overflow-y-auto max-h-96">
-        {dataRifa?.cotas.map((cota: Cota) => (
-          <ButtonRifa
-            key={cota.id}
-            label={cota.number}
-            onClickSelect={() => handleButtonClick(String(cota.number))}
-            selected={selectedButtons.has(String(cota.number))}
-            sold={cota.sold}
-            userPurchase={cota.userPurchaseId === user?.id}
-          />
-        ))}
-      </div>
+      {dataRifa?.showQuotas && (
+        <div className="grid grid-cols-5 gap-2 mx-10 overflow-y-auto max-h-96">
+          {dataRifa?.cotas.map((cota: Cota) => (
+            <ButtonRifa
+              key={cota.id}
+              label={cota.number}
+              onClickSelect={() => handleButtonClick(String(cota.number))}
+              selected={selectedButtons.has(String(cota.number))}
+              sold={cota.sold}
+              userPurchase={cota.userPurchaseId === user?.id}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
